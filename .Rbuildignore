@@ -1,0 +1,4 @@
+^README\.Rmd$
+^data-raw$
+^dplyrbench\.Rproj$
+^\.Rproj\.user$

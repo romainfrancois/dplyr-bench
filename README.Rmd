@@ -1,0 +1,49 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# dplyrbench
+
+```{r, eval = FALSE}
+dplyrbench::setup_libs()
+```
+
+```{r}
+library(bench)
+library(purrr)
+library(dplyr)
+library(dplyrbench)
+
+# non hybrid
+benchs({
+    mean_ <- function(...) mean(...)
+    df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g)
+  }, 
+  summarise(df, x = mean_(x))
+)
+
+# hybrid
+benchs(
+  df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g),
+  summarise(df, x = mean(x))
+)
+# partial hybrid
+benchs(
+  df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g),
+  summarise(df, x = sum(x) / n())
+)
+
+```
+
+
+
