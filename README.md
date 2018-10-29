@@ -26,27 +26,28 @@ no_hybrid <- benchs({
     df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g)
   }, 
   summarise(df, x = mean_(x))
-) %>% mutate(hybrid = FALSE)
+) %>% mutate(hybrid = FALSE, expression = "mean_()")
 
 # hybrid
 hybrid <- benchs(
   df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g),
   summarise(df, x = mean(x))
-) %>% mutate(hybrid = TRUE)
+) %>% mutate(hybrid = TRUE,  expression = "mean()")
 
 # partial hybrid
 partial_hybrid <- benchs(
   df <- tibble(x = rnorm(1e6), g = rep(1:1e5, 10)) %>% group_by(g),
   summarise(df, x = sum(x) / n())
-) %>% mutate(hybrid = c(TRUE, FALSE, FALSE))
+) %>% mutate(hybrid = c(TRUE, FALSE, FALSE),  expression = "sum() / n()")
 
 data <- bind_rows(no_hybrid, hybrid, partial_hybrid) %>% 
   select(version, unwind, hybrid, expression, min:mem_alloc)
 
-ggplot(data, aes(x = version, y = median, fill = hybrid)) + 
-  geom_bar(stat="identity") + 
-  facet_grid(.~expression) + 
-  labs("")
+ggplot(data, aes(y = version, x = median, col = hybrid)) + 
+  geom_point(size = 3) + 
+  facet_grid(expression~.) +
+  scale_x_log10() + 
+  ylab("")
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
