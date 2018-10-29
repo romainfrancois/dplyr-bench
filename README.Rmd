@@ -43,12 +43,12 @@ partial_hybrid <- benchs(
   summarise(df, x = sum(x) / n())
 ) %>% mutate(hybrid = c(TRUE, FALSE, FALSE),  expression = "sum() / n()")
 
-data <- bind_rows(no_hybrid, hybrid, partial_hybrid) %>% 
+data <- bind_rows(hybrid, no_hybrid, partial_hybrid) %>% 
   select(version, unwind, hybrid, expression, min:mem_alloc)
 
 ggplot(data, aes(y = version, x = median, col = hybrid)) + 
   geom_point(size = 3) + 
-  facet_grid(expression~.) +
+  facet_grid(factor(expression, levels = c("mean()", "mean_()", "sum() / n()"))~.) +
   scale_x_log10() + 
-  ylab("")
+  ylab("") 
 ```
