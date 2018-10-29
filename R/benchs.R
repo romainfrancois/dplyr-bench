@@ -17,7 +17,10 @@ benchs <- function(setup, code){
 
   suppressWarnings({
     map_dfr(libs, ~callr::r(f, libpath = .)) %>%
-      mutate(version = !!basename(libs)) %>%
-      select(version, everything())
+      mutate(
+        version = !!basename(libs),
+        unwind = c(FALSE, FALSE, TRUE)
+      ) %>%
+      select(version, unwind, expression, min:mem_alloc)
   })
 }
