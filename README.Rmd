@@ -19,9 +19,6 @@ dplyrbench::setup_libs()
 ```
 
 ```{r}
-library(bench)
-library(purrr)
-library(dplyr)
 library(dplyrbench)
 
 # non hybrid
